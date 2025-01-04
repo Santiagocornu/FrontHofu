@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2'; // Importar SweetAlert2
+import Swal from 'sweetalert2'; // Importa SweetAlert
 import ModalEditarProducto from './ModalEditarProducto';
 import '../../Styles.css';
 
@@ -17,7 +17,8 @@ const Product = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/products');
+      // Cambia esta URL por la de tu API en Heroku
+      const response = await axios.get('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/products');
       setProducts(response.data);
     } catch (error) {
       Swal.fire('Error', 'Error fetching products: ' + error.message, 'error');
@@ -32,10 +33,10 @@ const Product = () => {
   const handleSubmit = async (data) => { // Cambiar aquí para recibir data
     try {
       if (data.id_product) {
-        await axios.put(`http://localhost:8080/api/products/${data.id_product}`, data);
+        await axios.put(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/products/${data.id_product}`, data);
         Swal.fire('Éxito', 'Producto actualizado exitosamente', 'success');
       } else {
-        await axios.post('http://localhost:8080/api/products', data);
+        await axios.post('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/products', data);
         Swal.fire('Éxito', 'Producto creado exitosamente', 'success');
       }
       fetchProducts();
@@ -53,7 +54,7 @@ const Product = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/products/${id}`);
+      await axios.delete(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/products/${id}`);
       Swal.fire('Éxito', 'Producto eliminado exitosamente', 'success');
       fetchProducts();
     } catch (error) {

@@ -10,8 +10,8 @@ const EnvoiceCreateComponent = ({ fetchEnvoices }) => {
     const { selectedEmployerId } = useContext(EmployerContext);
     
     const [newEnvoice, setNewEnvoice] = useState({
-        nombre_envoice:'',
-        medioPago_envoice:'',
+        nombre_envoice: '',
+        medioPago_envoice: '',
         total_envoice: 0, // Iniciamos con cero
         client_id: null,
         products: []
@@ -44,7 +44,8 @@ const EnvoiceCreateComponent = ({ fetchEnvoices }) => {
         }
 
         try {
-            await axios.post('http://localhost:8080/api/envoices/createWithProducts', {
+            // Cambia esta URL por la de tu API en Heroku
+            await axios.post('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices/createWithProducts', {
                 ...newEnvoice,
                 employer_id: selectedEmployerId,
                 products: newEnvoice.products.map(product => ({

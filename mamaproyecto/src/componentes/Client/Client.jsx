@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import ModalEditarCliente from './ModalEditarCliente';
-import '../../Styles.css'
+import '../../Styles.css';
 
 const Cliente = () => {
   const [clientes, setClientes] = useState([]);
@@ -14,7 +14,7 @@ const Cliente = () => {
   const fetchClientes = async () => {
     const controller = new AbortController();
     try {
-      const response = await axios.get('http://localhost:8080/api/clients', {
+      const response = await axios.get('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients', {
         signal: controller.signal,
       });
       setClientes(response.data);
@@ -39,11 +39,11 @@ const Cliente = () => {
     try {
       if (form.id_person) {
         // Actualizar cliente existente
-        await axios.put(`http://localhost:8080/api/clients/${form.id_person}`, form);
+        await axios.put(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients/${form.id_person}`, form);
         Swal.fire('Éxito', 'Cliente actualizado exitosamente', 'success');
       } else {
         // Crear nuevo cliente
-        await axios.post('http://localhost:8080/api/clients', form);
+        await axios.post('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients', form);
         Swal.fire('Éxito', 'Cliente creado exitosamente', 'success');
       }
       fetchClientes(); // Volver a cargar clientes después de la operación
@@ -60,18 +60,15 @@ const Cliente = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/api/clients/${id}`);
+      const response = await axios.delete(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients/${id}`);
       Swal.fire('Éxito', response.data, 'success'); // Muestra el mensaje devuelto por el servidor
       fetchClientes(); // Volver a cargar clientes después de eliminar
     } catch (error) {
       if (error.response) {
-        // El servidor respondió con un estado fuera del rango 2xx
         Swal.fire('Error', error.response.data || 'Error desconocido', 'error'); // Muestra el mensaje específico del error
       } else if (error.request) {
-        // La solicitud fue hecha pero no hubo respuesta
         Swal.fire('Error', 'No se recibió respuesta del servidor.', 'error');
       } else {
-        // Algo pasó al configurar la solicitud
         Swal.fire('Error', 'Error al eliminar el cliente: ' + error.message, 'error');
       }
     }
@@ -79,7 +76,7 @@ const Cliente = () => {
 
   const handleModalSave = async (cliente) => {
     try {
-      await axios.put(`http://localhost:8080/api/clients/${cliente.id_person}`, cliente);
+      await axios.put(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients/${cliente.id_person}`, cliente);
       Swal.fire('Éxito', 'Cliente actualizado exitosamente', 'success');
       fetchClientes(); // Volver a cargar clientes después de actualizar
     } catch (error) {
@@ -157,6 +154,7 @@ const Cliente = () => {
         </tbody>
       </table>
 
+      {/* Modal component */}
       <ModalEditarCliente
         isOpen={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
@@ -168,4 +166,3 @@ const Cliente = () => {
 };
 
 export default Cliente;
-

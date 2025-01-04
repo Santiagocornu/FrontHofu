@@ -1,4 +1,3 @@
-// Stock.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ModalEditarStock from './ModalEditarStock'; // Importar el nuevo modal
@@ -17,7 +16,8 @@ const Stock = () => {
 
   const fetchStocks = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/stock');
+      // Cambia esta URL por la de tu API en Heroku
+      const response = await axios.get('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/stock');
       setStocks(response.data);
     } catch (error) {
       Swal.fire('Error', 'Error fetching stocks: ' + error.message, 'error');
@@ -34,7 +34,7 @@ const Stock = () => {
     if (form.id_Stock) {
       // Update existing stock
       try {
-        await axios.put(`http://localhost:8080/api/stock/${form.id_Stock}`, form);
+        await axios.put(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/stock/${form.id_Stock}`, form);
         Swal.fire('Éxito', 'Stock actualizado exitosamente', 'success');
         fetchStocks();
       } catch (error) {
@@ -43,7 +43,7 @@ const Stock = () => {
     } else {
       // Create new stock
       try {
-        await axios.post('http://localhost:8080/api/stock', form);
+        await axios.post('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/stock', form);
         Swal.fire('Éxito', 'Stock creado exitosamente', 'success');
         fetchStocks();
       } catch (error) {
@@ -60,7 +60,7 @@ const Stock = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/stock/${id}`);
+      await axios.delete(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/stock/${id}`);
       Swal.fire('Éxito', 'Stock eliminado exitosamente', 'success');
       fetchStocks();
     } catch (error) {
@@ -92,6 +92,7 @@ const Stock = () => {
         />
         <button type="submit" className="submit-button">{form.id_Stock ? 'Actualizar' : 'Crear'}</button>
       </form>
+      
       <h2>Stock:</h2>
       <table className="table-container">
         <thead>

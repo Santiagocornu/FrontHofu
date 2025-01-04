@@ -13,7 +13,8 @@ const ClientSelector = ({ onSelectClient }) => {
 
     const fetchClients = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/clients');
+            // Cambia esta URL por la de tu API en Heroku
+            const response = await axios.get('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients');
             setClients(response.data);
         } catch (error) {
             Swal.fire('Error', 'No se pudo conectar con el servidor: ' + error.message, 'error');

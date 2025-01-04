@@ -10,7 +10,8 @@ const EnvoiceManagementComponent = () => {
 
   const fetchEnvoices = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/envoices');
+      // Cambia esta URL por la de tu API en Heroku
+      const response = await axios.get('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices');
       setEnvoices(response.data);
     } catch (error) {
       if (error.response) {

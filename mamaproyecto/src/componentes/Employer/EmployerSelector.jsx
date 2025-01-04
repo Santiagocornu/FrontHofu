@@ -13,7 +13,8 @@ const EmployerSelector = () => {
 
   const fetchEmployers = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/employers');
+      // Cambia esta URL por la de tu API en Heroku
+      const response = await axios.get('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/employers');
       setEmployers(response.data);
     } catch (error) {
       console.error('Error fetching employers:', error);

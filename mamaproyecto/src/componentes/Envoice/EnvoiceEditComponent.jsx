@@ -16,7 +16,8 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
 
   const fetchEnvoiceDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/envoices/${envoiceId}`);
+      // Cambia esta URL por la de tu API en Heroku
+      const response = await axios.get(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices/${envoiceId}`);
       setEnvoiceDetails(response.data);
     } catch (error) {
       console.error('Error fetching envoice details:', error);
@@ -53,7 +54,8 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
     }
 
     try {
-      await axios.put(`http://localhost:8080/api/envoices/${envoiceId}`, {
+      // Cambia esta URL por la de tu API en Heroku
+      await axios.put(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices/${envoiceId}`, {
         ...envoiceDetails,
         employer_id: selectedEmployerId
       });
@@ -111,8 +113,8 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
               Medio de Pago:
               <input
                 type="text"
-                name="medioPago_envice"
-                value={envoiceDetails.medioPago_envice}
+                name="medioPago_envoice" // Corrige el nombre del campo aquí
+                value={envoiceDetails.medioPago_envoice}
                 onChange={handleInputChange}
                 required
               />
@@ -121,8 +123,8 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
               Total:
               <input
                 type="number"
-                name="total_envice"
-                value={envoiceDetails.total_envice === 0 ? '' : envoiceDetails.total_envice}
+                name="total_envoice" // Corrige el nombre del campo aquí
+                value={envoiceDetails.total_envoice === 0 ? '' : envoiceDetails.total_envoice}
                 readOnly
                 placeholder="Total"
               />
