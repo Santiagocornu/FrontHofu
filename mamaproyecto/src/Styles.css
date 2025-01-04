@@ -1,0 +1,259 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-top: 5%;
+    background-color: #f0f4f8;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Alinear hacia la derecha */
+    justify-content: center; /* Centra verticalmente */
+    width: 100%;
+    max-width: 500px;
+    gap: 10px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 0 auto; /* Centra horizontalmente */
+    margin-top: 20px; /* Reduce el espacio en la parte superior */
+    margin-bottom: 20px; /* Reduce el espacio en la parte inferior */
+}
+
+input {
+    width: calc(100% - 20px); /* Asegura que los inputs ocupen todo el ancho disponible menos el margen */
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    margin-bottom: 10px; /* Espacio entre inputs */
+}
+
+input:hover,
+input:focus {
+    border-color: rgb(216, 15, 15);
+    outline: none;
+}
+
+.submit-button,
+.edit-button,
+.delete-button,
+.cancel-button,
+.modal-button {
+    width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
+    padding: 10px;
+    background-color: rgb(216, 15, 15);
+    color: white;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px; /* Añade un pequeño margen superior */
+}
+
+.submit-button:hover,
+.edit-button:hover,
+.cancel-button:hover,
+.delete-button:hover,
+.modal-button:hover {
+    background-color: rgb(216, 15, 15);
+    opacity: 0.9;
+}
+
+.table-container {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: #fff; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-radius: 8px; 
+    overflow: hidden; 
+}
+
+th,
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc; 
+    text-align: left; 
+}
+
+th {
+    background-color: #f8f9fa; 
+}
+
+tr:hover {
+    background-color: #f1f1f1; 
+}
+
+.product-item-row {
+    margin-top: 10px; /* Espacio entre filas de productos */
+}
+
+.product-item {
+    display: flex; /* Usar flexbox para alinear elementos */
+    justify-content: space-between; /* Espacio entre el nombre y la cantidad */
+    padding: 10px 0; /* Espacio vertical alrededor de cada producto */
+}
+
+.product-item span {
+    flex-grow: 1; /* Permite que ambos elementos ocupen espacio equitativamente */
+}
+
+.product-item span:last-child {
+    text-align: right; /* Alinear la cantidad a la derecha */
+}
+
+.client-list {
+    display: flex;
+    flex-direction: column; /* Alinear clientes verticalmente */
+    gap: 10px; /* Espacio entre cada cliente */
+}
+
+.client-item {
+    display: flex;
+    justify-content: space-between; /* Espacio entre la información del cliente y el botón */
+    align-items: center; /* Centra verticalmente */
+    padding: 10px; /* Espacio interno */
+    border: 1px solid #ccc; /* Borde alrededor del cuadro */
+    border-radius: 4px; /* Esquinas redondeadas */
+    margin-bottom: 10px; /* Espacio entre los cuadros de clientes */
+}
+
+.client-info {
+    display: flex;
+    flex-direction: column; /* Alinea nombre y teléfono verticalmente */
+    text-align: right; /* Alinear texto a la derecha */
+    margin-right: 10px; /* Espacio entre la información y el botón */
+}
+
+.client-name {
+    font-weight: bold; /* Resalta el nombre del cliente */
+}
+
+.client-phone {
+    color: #555; /* Color más suave para el teléfono */
+}
+
+/* Estilos para modal y overlay */
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000; 
+    padding: 20px;
+    width: auto; 
+    max-width: 90%; 
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 999; 
+}
+
+/* Estilos para la barra de navegación */
+
+.navbar {
+    background-color: #D80F0F; /* Rojo bonito */
+    overflow: hidden;
+}
+
+.navbar-ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between; /* Para distribuir los elementos uniformemente */
+    align-items: center;
+}
+
+.navbar-li {
+    flex: 1; /* Hace que cada elemento se expanda igualmente */
+}
+
+.navbar-link {
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar-white-button {
+    color: black;
+    background-color: white;
+    border-radius: 20px; /* Esquinas redondeadas */
+    padding: 10px 20px; /* Añadir relleno adicional para hacer el botón redondo */
+    margin: 0 10px; /* Espaciado entre botones */
+}
+
+.navbar-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Hacer el borde redondo */
+    border: 2px solid gold; /* Borde dorado */
+}
+
+/* Estilos para el Home */
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.home-message {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+}
+
+/* Otros estilos existentes */
+
+@media (max-width: 600px) {
+    .container {
+        padding: 10px; 
+        margin-top: 3%; 
+    }
+    
+    .form-container {
+        width: auto; 
+        max-width: auto; 
+        padding: 10px; 
+        margin: auto; 
+        gap: 10px; 
+    }
+    
+    .table-container {
+        width: auto; 
+        max-width: auto; 
+        margin-top: 10px; 
+        padding: 10px; 
+    }
+}
