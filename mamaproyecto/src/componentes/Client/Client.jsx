@@ -12,22 +12,17 @@ const Cliente = () => {
 
   // Función para obtener clientes
   const fetchClientes = async () => {
-    const controller = new AbortController();
     try {
-      const response = await axios.get('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients', {
-        signal: controller.signal,
-      });
+      const response = await axios.get('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients');
       setClientes(response.data);
     } catch (error) {
-      if (error.name !== 'AbortError') {
-        Swal.fire('Error', 'Error al obtener los clientes: ' + error.message, 'error');
-      }
+      Swal.fire('Error', 'Error al obtener los clientes: ' + error.message, 'error');
     }
   };
 
   useEffect(() => {
     fetchClientes();
-  }, []); // Asegúrate de que las dependencias estén vacías
+  }, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -61,16 +56,10 @@ const Cliente = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients/${id}`);
-      Swal.fire('Éxito', response.data, 'success'); // Muestra el mensaje devuelto por el servidor
+      Swal.fire('Éxito', response.data, 'success');
       fetchClientes(); // Volver a cargar clientes después de eliminar
     } catch (error) {
-      if (error.response) {
-        Swal.fire('Error', error.response.data || 'Error desconocido', 'error'); // Muestra el mensaje específico del error
-      } else if (error.request) {
-        Swal.fire('Error', 'No se recibió respuesta del servidor.', 'error');
-      } else {
-        Swal.fire('Error', 'Error al eliminar el cliente: ' + error.message, 'error');
-      }
+      Swal.fire('Error', 'Error al eliminar el cliente: ' + error.message, 'error');
     }
   };
 
@@ -126,7 +115,6 @@ const Cliente = () => {
       
       <h2>Clientes:</h2>
       <table className="table-container">
-        
         <thead>
           <tr>
             <th>ID</th>
@@ -154,15 +142,14 @@ const Cliente = () => {
         </tbody>
       </table>
 
-      {/* Modal component */}
       <ModalEditarCliente
         isOpen={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
         cliente={selectedCliente}
         onSave={handleModalSave}
       />
-     </div>
-   );
+    </div>
+  );
 };
 
 export default Cliente;
