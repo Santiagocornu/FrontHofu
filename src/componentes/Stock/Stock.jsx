@@ -17,7 +17,7 @@ const Stock = () => {
   const fetchStocks = async () => {
     try {
       // Cambia esta URL por la de tu API en Heroku
-      const response = await axios.get('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/stock');
+      const response = await axios.get('https://hofusushi-3869a82ef3b4.herokuapp.com/api/stock');
       setStocks(response.data);
     } catch (error) {
       Swal.fire('Error', 'Error fetching stocks: ' + error.message, 'error');
@@ -34,7 +34,7 @@ const Stock = () => {
     if (form.id_Stock) {
       // Update existing stock
       try {
-        await axios.put(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/stock/${form.id_Stock}`, form);
+        await axios.put(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/stock/${form.id_Stock}`, form);
         Swal.fire('Éxito', 'Stock actualizado exitosamente', 'success');
         fetchStocks();
       } catch (error) {
@@ -43,7 +43,7 @@ const Stock = () => {
     } else {
       // Create new stock
       try {
-        await axios.post('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/stock', form);
+        await axios.post('https://hofusushi-3869a82ef3b4.herokuapp.com/api/stock', form);
         Swal.fire('Éxito', 'Stock creado exitosamente', 'success');
         fetchStocks();
       } catch (error) {
@@ -60,7 +60,7 @@ const Stock = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/stock/${id}`);
+      await axios.delete(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/stock/${id}`);
       Swal.fire('Éxito', 'Stock eliminado exitosamente', 'success');
       fetchStocks();
     } catch (error) {
