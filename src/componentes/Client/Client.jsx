@@ -13,7 +13,7 @@ const Cliente = () => {
   // Función para obtener clientes
   const fetchClientes = async () => {
     try {
-      const response = await axios.get('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients');
+      const response = await axios.get('https://hofusushi-3869a82ef3b4.herokuapp.com/api/clients');
       setClientes(response.data);
     } catch (error) {
       Swal.fire('Error', 'Error al obtener los clientes: ' + error.message, 'error');
@@ -34,11 +34,11 @@ const Cliente = () => {
     try {
       if (form.id_person) {
         // Actualizar cliente existente
-        await axios.put(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients/${form.id_person}`, form);
+        await axios.put(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/clients/${form.id_person}`, form);
         Swal.fire('Éxito', 'Cliente actualizado exitosamente', 'success');
       } else {
         // Crear nuevo cliente
-        await axios.post('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients', form);
+        await axios.post('https://hofusushi-3869a82ef3b4.herokuapp.com/api/clients', form);
         Swal.fire('Éxito', 'Cliente creado exitosamente', 'success');
       }
       fetchClientes(); // Volver a cargar clientes después de la operación
@@ -55,7 +55,7 @@ const Cliente = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients/${id}`);
+      const response = await axios.delete(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/clients/${id}`);
       Swal.fire('Éxito', response.data, 'success');
       fetchClientes(); // Volver a cargar clientes después de eliminar
     } catch (error) {
@@ -65,7 +65,7 @@ const Cliente = () => {
 
   const handleModalSave = async (cliente) => {
     try {
-      await axios.put(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/clients/${cliente.id_person}`, cliente);
+      await axios.put(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/clients/${cliente.id_person}`, cliente);
       Swal.fire('Éxito', 'Cliente actualizado exitosamente', 'success');
       fetchClientes(); // Volver a cargar clientes después de actualizar
     } catch (error) {
