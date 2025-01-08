@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import '../../Styles.css'; /* Asegúrate de importar el archivo de estilos */
 import EnvoiceEditComponent from './EnvoiceEditComponent';
 
-const EnviceListComponent = ({ envoices, fetchEnvoices }) => {
+const EnvoiceListComponent = ({ envoices, fetchEnvoices }) => {
   const [productsMap, setProductsMap] = useState({});
   const [editingEnviceId, setEditingEnviceId] = useState(null); // Estado para manejar la edición
 
@@ -110,4 +110,4 @@ const EnviceListComponent = ({ envoices, fetchEnvoices }) => {
   );
 };
 
-export default EnviceListComponent;
+export default EnvoiceListComponent;

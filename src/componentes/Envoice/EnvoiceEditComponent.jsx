@@ -1,22 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { EmployerContext } from '../../EmployerContext';
 import ClientSelector from './ClientSelector';
-import ProductSelector from './ProductSelector'; // Importar ProductSelector
+import ProductSelector from './ProductSelector';
 import Swal from 'sweetalert2';
-import '../../Styles.css'; /* Asegúrate de importar el archivo de estilos */
+import '../../Styles.css';
 
 const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
   const { selectedEmployerId } = useContext(EmployerContext);
   const [envoiceDetails, setEnvoiceDetails] = useState(null);
 
-  useEffect(() => {
-    fetchEnvoiceDetails();
-  }, [envoiceId]);
-
-  const fetchEnvoiceDetails = async () => {
+  const fetchEnvoiceDetails = useCallback(async () => {
     try {
-      // Cambia esta URL por la de tu API en Heroku
       const response = await axios.get(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices/${envoiceId}`);
       setEnvoiceDetails(response.data);
     } catch (error) {
@@ -27,7 +22,11 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
         text: 'No se pudieron cargar los detalles de la factura.'
       });
     }
-  };
+  }, [envoiceId]);
+
+  useEffect(() => {
+    fetchEnvoiceDetails();
+  }, [fetchEnvoiceDetails]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,7 +53,6 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
     }
 
     try {
-      // Cambia esta URL por la de tu API en Heroku
       await axios.put(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices/${envoiceId}`, {
         ...envoiceDetails,
         employer_id: selectedEmployerId
@@ -65,7 +63,7 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
         title: 'Éxito',
         text: 'Factura actualizada con éxito.'
       });
-      onClose(); // Cerrar el modal después de actualizar
+      onClose();
     } catch (error) {
       console.error('Error updating envoice:', error);
       Swal.fire({
@@ -81,11 +79,10 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
   };
 
   const handleAddProducts = (selectedProducts) => {
-    // Actualizar los detalles de la factura con los productos seleccionados
     setEnvoiceDetails((prev) => ({
       ...prev,
       products: selectedProducts,
-      total_envoice: calculateTotal(selectedProducts), // Calcular el nuevo total
+      total_envoice: calculateTotal(selectedProducts),
     }));
   };
 
@@ -113,7 +110,7 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
               Medio de Pago:
               <input
                 type="text"
-                name="medioPago_envoice" // Corrige el nombre del campo aquí
+                name="medioPago_envoice"
                 value={envoiceDetails.medioPago_envoice}
                 onChange={handleInputChange}
                 required
@@ -123,17 +120,16 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
               Total:
               <input
                 type="number"
-                name="total_envoice" // Corrige el nombre del campo aquí
+                name="total_envoice"
                 value={envoiceDetails.total_envoice === 0 ? '' : envoiceDetails.total_envoice}
                 readOnly
                 placeholder="Total"
               />
             </label>
             <ClientSelector onSelectClient={handleSelectClient} />
-            {/* Agregar ProductSelector para seleccionar productos */}
             <ProductSelector onAddProducts={handleAddProducts} />
             <button type="submit" className="submit-button">Actualizar</button>
-            <button type="button" className="cancel-button" onClick={onClose}>Cancelar</button> {/* Botón de cancelar */}
+            <button type="button" className="cancel-button" onClick={onClose}>Cancelar</button>
           </form>
         </div>
       </div>
@@ -142,3 +138,4 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
 };
 
 export default EnvoiceEditComponent;
+
