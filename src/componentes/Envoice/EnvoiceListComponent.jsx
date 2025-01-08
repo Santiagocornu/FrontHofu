@@ -1,22 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import '../../Styles.css'; /* Asegúrate de importar el archivo de estilos */
+import '../../Styles.css'; 
 import EnvoiceEditComponent from './EnvoiceEditComponent';
 
 const EnvoiceListComponent = ({ envoices, fetchEnvoices }) => {
   const [productsMap, setProductsMap] = useState({});
-  const [editingEnviceId, setEditingEnviceId] = useState(null); // Estado para manejar la edición
+  const [editingEnviceId, setEditingEnviceId] = useState(null);
 
-  useEffect(() => {
-    fetchAllProducts();
-  }, [envoices]);
-
-  const fetchAllProducts = async () => {
+  const fetchAllProducts = useCallback(async () => {
     try {
       const productsByEnvice = {};
       for (const envice of envoices) {
-        // Cambia esta URL por la de tu API en Heroku
         const { data: enviceProducts = [] } = await axios.get(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices/${envice.id_envice}/products`);
         
         const { data: productsData = [] } = await axios.get(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/products`);
@@ -35,7 +30,11 @@ const EnvoiceListComponent = ({ envoices, fetchEnvoices }) => {
     } catch (error) {
       Swal.fire('Error', 'No se pudo conectar con el servidor: ' + error.message, 'error');
     }
-  };
+  }, [envoices]);
+
+  useEffect(() => {
+    fetchAllProducts();
+  }, [envoices, fetchAllProducts]);
 
   const handleDeleteEnvice = async (id) => {
     try {
@@ -53,11 +52,11 @@ const EnvoiceListComponent = ({ envoices, fetchEnvoices }) => {
   };
 
   const handleEditClick = (id) => {
-    setEditingEnviceId(id); // Establecer el ID de la envoice que se va a editar
+    setEditingEnviceId(id);
   };
 
   const handleCloseEdit = () => {
-    setEditingEnviceId(null); // Restablecer el ID de edición para cerrar el modal
+    setEditingEnviceId(null);
   };
 
   return (
@@ -67,7 +66,7 @@ const EnvoiceListComponent = ({ envoices, fetchEnvoices }) => {
         <EnvoiceEditComponent 
           envoiceId={editingEnviceId} 
           fetchEnvoices={fetchEnvoices} 
-          onClose={handleCloseEdit} // Pasar la función onClose
+          onClose={handleCloseEdit} 
         />
       ) : (
         <table className="table-container">
