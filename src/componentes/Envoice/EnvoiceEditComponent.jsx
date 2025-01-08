@@ -53,7 +53,7 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
     }
 
     try {
-      await axios.put(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices/${envoiceId}`, {
+      await axios.put(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${envoiceId}`, {
         ...envoiceDetails,
         employer_id: selectedEmployerId
       });

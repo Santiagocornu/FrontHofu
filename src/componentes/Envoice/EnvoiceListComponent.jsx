@@ -12,9 +12,9 @@ const EnvoiceListComponent = ({ envoices, fetchEnvoices }) => {
     try {
       const productsByEnvice = {};
       for (const envice of envoices) {
-        const { data: enviceProducts = [] } = await axios.get(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices/${envice.id_envice}/products`);
+        const { data: enviceProducts = [] } = await axios.get(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${envice.id_envice}/products`);
         
-        const { data: productsData = [] } = await axios.get(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/products`);
+        const { data: productsData = [] } = await axios.get(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/products`);
         
         const filteredProducts = productsData
           .map(product => {
@@ -38,7 +38,7 @@ const EnvoiceListComponent = ({ envoices, fetchEnvoices }) => {
 
   const handleDeleteEnvice = async (id) => {
     try {
-      await axios.delete(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices/${id}`);
+      await axios.delete(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${id}`);
       Swal.fire('Éxito', 'Envoice eliminada con éxito', 'success');
       fetchEnvoices();
       setProductsMap((prev) => {

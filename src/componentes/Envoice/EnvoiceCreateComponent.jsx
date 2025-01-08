@@ -45,7 +45,7 @@ const EnvoiceCreateComponent = ({ fetchEnvoices }) => {
 
         try {
             // Cambia esta URL por la de tu API en Heroku
-            await axios.post('https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices/createWithProducts', {
+            await axios.post('https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/createWithProducts', {
                 ...newEnvoice,
                 employer_id: selectedEmployerId,
                 products: newEnvoice.products.map(product => ({
