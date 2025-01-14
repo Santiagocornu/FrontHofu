@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import ModalEditarCliente from './ModalEditarCliente';
-import '../../Styles.css';
+import ModalEditarCliente from './ModalEditarCliente'; // Asegúrate de que este componente esté importado
 
 const Cliente = () => {
   const [clientes, setClientes] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedCliente, setSelectedCliente] = useState({});
   const [form, setForm] = useState({ id_person: '', nombre_person: '', apellido_person: '', telefono_person: '', preferencia_client: '' });
+  const [searchNombre, setSearchNombre] = useState('');
+  const [searchApellido, setSearchApellido] = useState('');
 
   // Función para obtener clientes
   const fetchClientes = async () => {
@@ -27,6 +28,14 @@ const Cliente = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setForm({ ...form, [name]: value });
+  };
+
+  const handleNombreChange = (event) => {
+    setSearchNombre(event.target.value);
+  };
+
+  const handleApellidoChange = (event) => {
+    setSearchApellido(event.target.value);
   };
 
   const handleSubmit = async (event) => {
@@ -74,6 +83,13 @@ const Cliente = () => {
     setModalIsOpen(false);
   };
 
+  const getFilteredClientes = () => {
+    return clientes.filter((cliente) =>
+      cliente.nombre_person.toLowerCase().includes(searchNombre.toLowerCase()) &&
+      cliente.apellido_person.toLowerCase().includes(searchApellido.toLowerCase())
+    );
+  };
+
   return (
     <div className="container">
       <h2>Crear Clientes</h2>
@@ -113,6 +129,22 @@ const Cliente = () => {
         <button type="submit" className="submit-button">{form.id_person ? 'Actualizar' : 'Crear'}</button>
       </form>
       
+      <h2>Buscar Clientes</h2>
+      <input
+        type="text"
+        placeholder="Buscar por nombre"
+        value={searchNombre}
+        onChange={handleNombreChange}
+        className="search-input"
+      />
+      <input
+        type="text"
+        placeholder="Buscar por apellido"
+        value={searchApellido}
+        onChange={handleApellidoChange}
+        className="search-input"
+      />
+
       <h2>Clientes:</h2>
       <table className="table-container">
         <thead>
@@ -126,7 +158,7 @@ const Cliente = () => {
           </tr>
         </thead>
         <tbody>
-          {clientes.map((cliente) => (
+          {getFilteredClientes().map((cliente) => (
             <tr key={cliente.id_person}>
               <td>{cliente.id_person}</td>
               <td>{cliente.nombre_person}</td>

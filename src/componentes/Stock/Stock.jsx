@@ -7,9 +7,9 @@ import Swal from 'sweetalert2';
 const Stock = () => {
   const [stocks, setStocks] = useState([]);
   const [form, setForm] = useState({ id_Stock: '', nombre_stock: '', cantidad_stock: '' });
-  
+  const [searchNombre, setSearchNombre] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  
+
   useEffect(() => {
     fetchStocks();
   }, []);
@@ -27,6 +27,10 @@ const Stock = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setForm({ ...form, [name]: value });
+  };
+
+  const handleNombreChange = (event) => {
+    setSearchNombre(event.target.value);
   };
 
   const handleSubmit = async (event) => {
@@ -68,6 +72,12 @@ const Stock = () => {
     }
   };
 
+  const getFilteredStocks = () => {
+    return stocks.filter((stock) =>
+      stock.nombre_stock.toLowerCase().includes(searchNombre.toLowerCase())
+    );
+  };
+
   return (
     <div className="container">
       <h2>Crear Stock</h2>
@@ -92,6 +102,15 @@ const Stock = () => {
         />
         <button type="submit" className="submit-button">{form.id_Stock ? 'Actualizar' : 'Crear'}</button>
       </form>
+
+      <h2>Buscar Stock</h2>
+      <input
+        type="text"
+        placeholder="Buscar por nombre"
+        value={searchNombre}
+        onChange={handleNombreChange}
+        className="search-input"
+      />
       
       <h2>Stock:</h2>
       <table className="table-container">
@@ -104,7 +123,7 @@ const Stock = () => {
           </tr>
         </thead>
         <tbody>
-          {stocks.map((stock) => (
+          {getFilteredStocks().map((stock) => (
             <tr key={stock.id_Stock}>
               <td>{stock.id_Stock}</td>
               <td>{stock.nombre_stock}</td>

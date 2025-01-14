@@ -7,7 +7,7 @@ import '../../Styles.css';
 const Product = () => {
   const [products, setProducts] = useState([]);
   const [form, setForm] = useState({ id_product: '', nombre_product: '', descripcion_product: '', precio: '' });
-  
+  const [searchNombre, setSearchNombre] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState({});
 
@@ -28,6 +28,10 @@ const Product = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setForm({ ...form, [name]: value });
+  };
+
+  const handleNombreChange = (event) => {
+    setSearchNombre(event.target.value);
   };
 
   const handleSubmit = async (data) => { // Cambiar aquí para recibir data
@@ -60,6 +64,12 @@ const Product = () => {
     } catch (error) {
       Swal.fire('Error', 'Error deleting product: ' + error.message, 'error');
     }
+  };
+
+  const getFilteredProducts = () => {
+    return products.filter((product) =>
+      product.nombre_product.toLowerCase().includes(searchNombre.toLowerCase())
+    );
   };
 
   return (
@@ -95,6 +105,15 @@ const Product = () => {
         />
         <button type="submit" className="submit-button">{form.id_product ? 'Actualizar' : 'Crear'}</button>
       </form>
+
+      <h2>Buscar Producto</h2>
+      <input
+        type="text"
+        placeholder="Buscar por nombre"
+        value={searchNombre}
+        onChange={handleNombreChange}
+        className="search-input"
+      />
       
       <h2>Productos:</h2>
       <table className="table-container">
@@ -108,7 +127,7 @@ const Product = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
+          {getFilteredProducts().map((product) => (
             <tr key={product.id_product}>
               <td>{product.id_product}</td>
               <td>{product.nombre_product}</td>

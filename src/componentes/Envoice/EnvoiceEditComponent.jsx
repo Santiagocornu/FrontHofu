@@ -12,7 +12,7 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
 
   const fetchEnvoiceDetails = useCallback(async () => {
     try {
-      const response = await axios.get(`https://hofusushi-6bd7d2d065f9.herokuapp.com/api/envoices/${envoiceId}`);
+      const response = await axios.get(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${envoiceId}`);
       setEnvoiceDetails(response.data);
     } catch (error) {
       console.error('Error fetching envoice details:', error);
@@ -42,7 +42,7 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
       });
       return;
     }
-
+  
     if (!envoiceDetails.nombre_envoice || !envoiceDetails.medioPago_envoice || envoiceDetails.total_envoice <= 0) {
       Swal.fire({
         icon: 'warning',
@@ -51,12 +51,57 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
       });
       return;
     }
-
+  
     try {
+      // Update the main envoice
       await axios.put(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${envoiceId}`, {
         ...envoiceDetails,
         employer_id: selectedEmployerId
       });
+  
+      // Fetch existing envoiceProducts
+      const { data: existingProducts } = await axios.get(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${envoiceId}/products`);
+  
+      // Create a map for existing products for quick lookup
+      const existingProductsMap = {};
+      existingProducts.forEach(ep => {
+        existingProductsMap[ep.productId] = ep;
+      });
+  
+      // Update or create envoiceProducts
+      for (const product of envoiceDetails.products) {
+        const existingProduct = existingProductsMap[product.id_product];
+  
+        if (product.quantity > 0) {
+          if (existingProduct) {
+            // Update existing product
+            await axios.put(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoiceProducts/${existingProduct.id}`, {
+              envoiceId,
+              productId: product.id_product,
+              quantity: product.quantity
+            });
+          } else {
+            // Create new product entry
+            await axios.post(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoiceProducts`, {
+              envoiceId,
+              productId: product.id_product,
+              quantity: product.quantity
+            });
+          }
+        } else if (existingProduct) {
+          // Delete product if quantity is 0
+          const deleteResponse = await axios.delete(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoiceProducts/${existingProduct.id}`);
+          if (deleteResponse.status !== 204) {
+            console.error('Failed to delete envoiceProduct:', deleteResponse);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo eliminar el producto de la factura.'
+            });
+          }
+        }
+      }
+  
       fetchEnvoices();
       Swal.fire({
         icon: 'success',
@@ -73,6 +118,8 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
       });
     }
   };
+  
+  
 
   const handleSelectClient = (clientId) => {
     setEnvoiceDetails({ ...envoiceDetails, client_id: clientId });
@@ -138,4 +185,3 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
 };
 
 export default EnvoiceEditComponent;
-

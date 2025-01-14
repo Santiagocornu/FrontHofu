@@ -6,27 +6,27 @@ import EnvoiceEditComponent from './EnvoiceEditComponent';
 
 const EnvoiceListComponent = ({ envoices, fetchEnvoices }) => {
   const [productsMap, setProductsMap] = useState({});
-  const [editingEnviceId, setEditingEnviceId] = useState(null);
+  const [editingEnvoiceId, setEditingEnvoiceId] = useState(null);
 
   const fetchAllProducts = useCallback(async () => {
     try {
-      const productsByEnvice = {};
-      for (const envice of envoices) {
-        const { data: enviceProducts = [] } = await axios.get(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${envice.id_envice}/products`);
+      const productsByEnvoice = {};
+      for (const envoice of envoices) {
+        const { data: envoiceProducts = [] } = await axios.get(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${envoice.id_envoice}/products`);
         
         const { data: productsData = [] } = await axios.get(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/products`);
         
         const filteredProducts = productsData
           .map(product => {
-            const productQuantity = enviceProducts.find(ep => ep.productId === product.id_product)?.quantity || 0;
+            const productQuantity = envoiceProducts.find(ep => ep.productId === product.id_product)?.quantity || 0;
             return { ...product, quantity: productQuantity };
           })
           .filter(product => product.quantity > 0);
 
-        productsByEnvice[envice.id_envice] = filteredProducts;
+        productsByEnvoice[envoice.id_envoice] = filteredProducts;
       }
 
-      setProductsMap(productsByEnvice);
+      setProductsMap(productsByEnvoice);
     } catch (error) {
       Swal.fire('Error', 'No se pudo conectar con el servidor: ' + error.message, 'error');
     }
@@ -36,7 +36,7 @@ const EnvoiceListComponent = ({ envoices, fetchEnvoices }) => {
     fetchAllProducts();
   }, [envoices, fetchAllProducts]);
 
-  const handleDeleteEnvice = async (id) => {
+  const handleDeleteEnvoice = async (id) => {
     try {
       await axios.delete(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${id}`);
       Swal.fire('Éxito', 'Envoice eliminada con éxito', 'success');
@@ -52,19 +52,19 @@ const EnvoiceListComponent = ({ envoices, fetchEnvoices }) => {
   };
 
   const handleEditClick = (id) => {
-    setEditingEnviceId(id);
+    setEditingEnvoiceId(id);
   };
 
   const handleCloseEdit = () => {
-    setEditingEnviceId(null);
+    setEditingEnvoiceId(null);
   };
 
   return (
     <div className="container">
       <h2>Lista de Envoices</h2>
-      {editingEnviceId ? (
+      {editingEnvoiceId ? (
         <EnvoiceEditComponent 
-          envoiceId={editingEnviceId} 
+          envoiceId={editingEnvoiceId} 
           fetchEnvoices={fetchEnvoices} 
           onClose={handleCloseEdit} 
         />
@@ -79,18 +79,18 @@ const EnvoiceListComponent = ({ envoices, fetchEnvoices }) => {
             </tr>
           </thead>
           <tbody>
-            {envoices.map((envice) => (
-              <React.Fragment key={envice.id_envice}>
+            {envoices.map((envoice) => (
+              <React.Fragment key={envoice.id_envoice}>
                 <tr>
-                  <td>{envice.nombre_envoice}</td>
-                  <td>{envice.medioPago_envoice}</td>
-                  <td>${envice.total_envoice}</td>
+                  <td>{envoice.nombre_envoice}</td>
+                  <td>{envoice.medioPago_envoice}</td>
+                  <td>${envoice.total_envoice}</td>
                   <td>
-                    <button onClick={() => handleEditClick(envice.id_envice)} className="edit-button">Editar</button>
-                    <button onClick={() => handleDeleteEnvice(envice.id_envice)} className="delete-button">Eliminar</button>
+                    <button onClick={() => handleEditClick(envoice.id_envoice)} className="edit-button">Editar</button>
+                    <button onClick={() => handleDeleteEnvoice(envoice.id_envoice)} className="delete-button">Eliminar</button>
                   </td>
                 </tr>
-                {productsMap[envice.id_envice]?.map(product => (
+                {productsMap[envoice.id_envoice]?.map(product => (
                   <tr key={product.id_product} className="product-item-row">
                     <td colSpan="4">
                       <div className="product-item">
