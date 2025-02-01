@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2'; /* Importar SweetAlert2 */
-import '../../Styles.css'; /* Asegúrate de importar el archivo de estilos */
+import Swal from 'sweetalert2';
+import '../../Styles.css';
 
-const ProductSelector = ({ onAddProducts }) => {
+const ProductSelector = ({ onAddProducts, selectedProducts }) => {
   const [products, setProducts] = useState([]);
-  const [selectedProducts, setSelectedProducts] = useState({});
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Cambia esta URL por la de tu API en Heroku
-        const response = await axios.get('https://hofusushi-3869a82ef3b4.herokuapp.com/api/products');
+        const response = await axios.get('https://hofusushi-d77c0453ff79.herokuapp.com/api/products');
         setProducts(response.data);
+        setFilteredProducts(response.data);
       } catch (error) {
         Swal.fire('Error', 'No se pudo conectar con el servidor: ' + error.message, 'error');
       }
@@ -22,64 +23,97 @@ const ProductSelector = ({ onAddProducts }) => {
     fetchProducts();
   }, []);
 
-  const handleQuantityChange = (productId, quantity, precio) => {
+  const handleQuantityChange = (product, quantity) => {
     if (quantity > 0) {
-      setSelectedProducts({
+      onAddProducts({
         ...selectedProducts,
-        [productId]: { quantity, precio }
+        [product.id_product]: { ...product, quantity }
       });
     } else {
       const updatedSelectedProducts = { ...selectedProducts };
-      delete updatedSelectedProducts[productId];
-      setSelectedProducts(updatedSelectedProducts);
+      delete updatedSelectedProducts[product.id_product];
+      onAddProducts(updatedSelectedProducts);
     }
   };
 
-  const handleAddProducts = () => {
-    const productArray = Object.keys(selectedProducts).map((productId) => ({
-      id_product: productId,
-      quantity: selectedProducts[productId].quantity,
-      precio: selectedProducts[productId].precio
-    }));
-
-    onAddProducts(productArray);
-    setShowModal(false);
-
-    // Mostrar alerta con SweetAlert2
+  const handleProductClick = (product) => {
     Swal.fire({
-      icon: 'success',
-      title: 'Éxito',
-      text: 'Productos añadidos con éxito'
+      title: 'Ingrese la cantidad deseada',
+      input: 'number',
+      inputAttributes: {
+        min: 1,
+        step: 1
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Añadir',
+      cancelButtonText: 'Cancelar',
+      preConfirm: (quantity) => {
+        return new Promise((resolve) => {
+          if (!quantity || quantity <= 0) {
+            Swal.showValidationMessage('Debe ingresar una cantidad válida');
+          } else {
+            resolve(quantity);
+          }
+        });
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const quantity = parseInt(result.value, 10);
+        if (!isNaN(quantity) && quantity > 0) {
+          handleQuantityChange(product, quantity);
+          Swal.fire(
+            'Añadido',
+            `${product.nombre_product} añadido con cantidad: ${quantity}`,
+            'success'
+          );
+        }
+      }
     });
   };
 
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = products.filter(product =>
+      product.nombre_product.toLowerCase().includes(query)
+    );
+    setFilteredProducts(filtered);
+  };
   return (
-    <div>
-      <button type="button" className="modal-button" onClick={() => setShowModal(true)}>
+    <div className="product-selector">
+      <button type="button" className="red-button" onClick={() => setShowModal(true)}>
         Seleccionar Productos
       </button>
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
             <h3>Seleccionar Productos</h3>
-            {products.map((product) => (
-              <div key={product.id_product} className="product-item">
-                {product.nombre_product} - ${product.precio}
-                <input
-                  type="number"
-                  min="0"
-                  placeholder="Cantidad"
-                  onChange={(e) => handleQuantityChange(product.id_product, e.target.value, product.precio)}
-                />
-              </div>
-            ))}
-            <button type="button" className="cancel-button" onClick={handleAddProducts}>Agregar Productos</button>
-            <button type="button" className="cancel-button" onClick={() => setShowModal(false)}>Cancelar</button>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearch}
+              placeholder="Buscar producto..."
+              className="search-input"
+            />
+            <div className="product-list">
+              {filteredProducts.map((product) => (
+                <div
+                  key={product.id_product}
+                  className="product-item"
+                  onClick={() => handleProductClick(product)}
+                >
+                  {product.nombre_product} - ${product.precio}
+                </div>
+              ))}
+            </div>
+            <button type="button" className="red-button" onClick={() => setShowModal(false)}>Cerrar</button>
           </div>
         </div>
       )}
     </div>
   );
+  
 };
 
 export default ProductSelector;

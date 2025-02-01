@@ -17,8 +17,8 @@ const Product = () => {
 
   const fetchProducts = async () => {
     try {
-      // Cambia esta URL por la de tu API en Heroku
-      const response = await axios.get('https://hofusushi-3869a82ef3b4.herokuapp.com/api/products');
+      // Cambia esta URL por la de tu nueva API en Heroku
+      const response = await axios.get('https://hofusushi-d77c0453ff79.herokuapp.com/api/products');
       setProducts(response.data);
     } catch (error) {
       Swal.fire('Error', 'Error fetching products: ' + error.message, 'error');
@@ -37,10 +37,10 @@ const Product = () => {
   const handleSubmit = async (data) => { // Cambiar aquí para recibir data
     try {
       if (data.id_product) {
-        await axios.put(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/products/${data.id_product}`, data);
+        await axios.put(`https://hofusushi-d77c0453ff79.herokuapp.com/api/products/${data.id_product}`, data);
         Swal.fire('Éxito', 'Producto actualizado exitosamente', 'success');
       } else {
-        await axios.post('https://hofusushi-3869a82ef3b4.herokuapp.com/api/products', data);
+        await axios.post('https://hofusushi-d77c0453ff79.herokuapp.com/api/products', data);
         Swal.fire('Éxito', 'Producto creado exitosamente', 'success');
       }
       fetchProducts();
@@ -58,7 +58,7 @@ const Product = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/products/${id}`);
+      await axios.delete(`https://hofusushi-d77c0453ff79.herokuapp.com/api/products/${id}`);
       Swal.fire('Éxito', 'Producto eliminado exitosamente', 'success');
       fetchProducts();
     } catch (error) {
@@ -103,7 +103,7 @@ const Product = () => {
           required
           className="modal-input"
         />
-        <button type="submit" className="submit-button">{form.id_product ? 'Actualizar' : 'Crear'}</button>
+        <button type="submit" className="red-button">{form.id_product ? 'Actualizar' : 'Crear'}</button>
       </form>
 
       <h2>Buscar Producto</h2>
@@ -134,8 +134,8 @@ const Product = () => {
               <td>{product.descripcion_product}</td>
               <td>{product.precio}</td>
               <td>
-                <button onClick={() => handleEdit(product)} className="edit-button">Editar</button>
-                <button onClick={() => handleDelete(product.id_product)} className="delete-button">Eliminar</button>
+                <button onClick={() => handleEdit(product)} className="red-button">Editar</button>
+                <button onClick={() => handleDelete(product.id_product)} className="red-button">Eliminar</button>
               </td>
             </tr>
           ))}

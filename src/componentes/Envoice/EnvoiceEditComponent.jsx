@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { EmployerContext } from '../../EmployerContext';
-import ClientSelector from './ClientSelector';
 import ProductSelector from './ProductSelector';
 import Swal from 'sweetalert2';
 import '../../Styles.css';
@@ -9,11 +8,25 @@ import '../../Styles.css';
 const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
   const { selectedEmployerId } = useContext(EmployerContext);
   const [envoiceDetails, setEnvoiceDetails] = useState(null);
+  const [productsToRemove, setProductsToRemove] = useState([]);
 
   const fetchEnvoiceDetails = useCallback(async () => {
     try {
-      const response = await axios.get(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${envoiceId}`);
-      setEnvoiceDetails(response.data);
+      const response = await axios.get(`https://hofusushi-d77c0453ff79.herokuapp.com/api/envoices/${envoiceId}`);
+      const envoiceProductsResponse = await axios.get(`https://hofusushi-d77c0453ff79.herokuapp.com/api/envoiceProducts/envoice/${envoiceId}`);
+      
+      const envoiceProducts = envoiceProductsResponse.data;
+      
+      const products = await Promise.all(envoiceProducts.map(async (envoiceProduct) => {
+        const productResponse = await axios.get(`https://hofusushi-d77c0453ff79.herokuapp.com/api/products/${envoiceProduct.productId}`);
+        return {
+          ...productResponse.data,
+          quantity: envoiceProduct.quantity,
+          envoiceProductId: envoiceProduct.id // Incluyendo el id correcto
+        };
+      }));
+      
+      setEnvoiceDetails({ ...response.data, products });
     } catch (error) {
       console.error('Error fetching envoice details:', error);
       Swal.fire({
@@ -54,51 +67,24 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
   
     try {
       // Update the main envoice
-      await axios.put(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${envoiceId}`, {
+      await axios.put(`https://hofusushi-d77c0453ff79.herokuapp.com/api/envoices/${envoiceId}`, {
         ...envoiceDetails,
         employer_id: selectedEmployerId
       });
-  
-      // Fetch existing envoiceProducts
-      const { data: existingProducts } = await axios.get(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoices/${envoiceId}/products`);
-  
-      // Create a map for existing products for quick lookup
-      const existingProductsMap = {};
-      existingProducts.forEach(ep => {
-        existingProductsMap[ep.productId] = ep;
-      });
-  
-      // Update or create envoiceProducts
+
+      // Delete products that were marked for removal
+      for (const productId of productsToRemove) {
+        await axios.delete(`https://hofusushi-d77c0453ff79.herokuapp.com/api/envoiceProducts/${productId}`);
+      }
+
+      // Create new envoiceProducts if they don't exist
       for (const product of envoiceDetails.products) {
-        const existingProduct = existingProductsMap[product.id_product];
-  
-        if (product.quantity > 0) {
-          if (existingProduct) {
-            // Update existing product
-            await axios.put(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoiceProducts/${existingProduct.id}`, {
-              envoiceId,
-              productId: product.id_product,
-              quantity: product.quantity
-            });
-          } else {
-            // Create new product entry
-            await axios.post(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoiceProducts`, {
-              envoiceId,
-              productId: product.id_product,
-              quantity: product.quantity
-            });
-          }
-        } else if (existingProduct) {
-          // Delete product if quantity is 0
-          const deleteResponse = await axios.delete(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/envoiceProducts/${existingProduct.id}`);
-          if (deleteResponse.status !== 204) {
-            console.error('Failed to delete envoiceProduct:', deleteResponse);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo eliminar el producto de la factura.'
-            });
-          }
+        if (!product.envoiceProductId) {
+          await axios.post('https://hofusushi-d77c0453ff79.herokuapp.com/api/envoiceProducts', {
+            envoiceId,
+            productId: product.id_product,
+            quantity: product.quantity
+          });
         }
       }
   
@@ -118,23 +104,33 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
       });
     }
   };
-  
-  
-
-  const handleSelectClient = (clientId) => {
-    setEnvoiceDetails({ ...envoiceDetails, client_id: clientId });
-  };
 
   const handleAddProducts = (selectedProducts) => {
+    const productsArray = Object.values(selectedProducts);
     setEnvoiceDetails((prev) => ({
       ...prev,
-      products: selectedProducts,
-      total_envoice: calculateTotal(selectedProducts),
+      products: productsArray,
+      total_envoice: calculateTotal(productsArray),
     }));
   };
 
+  const handleRemoveProduct = (productId) => {
+    const productToRemove = envoiceDetails.products.find(product => product.id_product === productId);
+    setProductsToRemove((prev) => [...prev, productToRemove.envoiceProductId]);
+    setEnvoiceDetails((prev) => {
+      const updatedProducts = prev.products.filter(product => product.id_product !== productId);
+      return {
+        ...prev,
+        products: updatedProducts,
+        total_envoice: calculateTotal(updatedProducts),
+      };
+    });
+  };
+
   const calculateTotal = (products) => {
-    return products.reduce((total, product) => total + (product.precio * product.quantity), 0);
+    return Array.isArray(products)
+      ? products.reduce((total, product) => total + (product.precio * product.quantity), 0)
+      : 0;
   };
 
   return (
@@ -173,15 +169,41 @@ const EnvoiceEditComponent = ({ envoiceId, fetchEnvoices, onClose }) => {
                 placeholder="Total"
               />
             </label>
-            <ClientSelector onSelectClient={handleSelectClient} />
-            <ProductSelector onAddProducts={handleAddProducts} />
-            <button type="submit" className="submit-button">Actualizar</button>
-            <button type="button" className="cancel-button" onClick={onClose}>Cancelar</button>
+            <ProductSelector onAddProducts={handleAddProducts} selectedProducts={envoiceDetails.products.reduce((acc, product) => {
+              acc[product.id_product] = product;
+              return acc;
+            }, {})} />
+            <div className="selected-products-list">
+              <h4>Productos Seleccionados:</h4>
+              <table className="table-container">
+                <thead>
+                  <tr>
+                    <th>Nombre del Producto</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {envoiceDetails.products.map(product => (
+                    <tr key={product.id_product} className="product-item-row">
+                      <td>{product.nombre_product}</td>
+                      <td>{product.quantity}</td>
+                      <td>
+                        <button type="button" className="red-button" onClick={() => handleRemoveProduct(product.id_product)}>Eliminar</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <button type="submit" className="red-button">Actualizar</button>
+            <button type="button" className="red-button cancel-button" onClick={onClose}>Cancelar</button>
           </form>
         </div>
       </div>
     )
   );
+  
 };
 
 export default EnvoiceEditComponent;

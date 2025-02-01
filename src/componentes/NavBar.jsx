@@ -34,6 +34,11 @@ const Navbar = () => {
           </Link>
         </li>
         <li className="navbar-li">
+          <Link to="/sales" className="navbar-link navbar-white-button">
+            Ventas
+          </Link>
+        </li>
+        <li className="navbar-li">
           <Link to="/empleado" className="navbar-link">
             <img src={homeIcon} alt="Empleado" className="navbar-image" />
           </Link>

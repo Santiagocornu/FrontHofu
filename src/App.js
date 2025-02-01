@@ -8,6 +8,8 @@ import { EmployerProvider } from './EmployerContext';
 import EmployerComponent from './componentes/Employer/EmployerComponent';
 import EnvoiceManagementComponent from './componentes/Envoice/EnvoiceManagementComponent';
 import Stock from './componentes/Stock/Stock';
+import SalesComponent from './componentes/Sales/Sales';
+import Footer from './componentes/Footer';
 
 function App() {
   return (
@@ -22,8 +24,10 @@ function App() {
             <Route path="/stock" element={<Stock />} />
             <Route path="/empleado" element={<EmployerComponent />} />
             <Route path="/envoice" element={<EnvoiceManagementComponent />} />
+            <Route path="/sales" element={<SalesComponent />} />
           </Routes>
         </Router>
+        <Footer/>
       </EmployerProvider>
     </div>
   );

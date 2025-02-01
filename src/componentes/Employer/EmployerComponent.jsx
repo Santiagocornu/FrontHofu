@@ -20,8 +20,7 @@ const EmployerComponent = () => {
     const fetchEmployerDetails = async () => {
       if (selectedEmployerId && !isNaN(selectedEmployerId)) {
         try {
-          // Cambia esta URL por la de tu API en Heroku
-          const response = await axios.get(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/employers/${selectedEmployerId}`);
+          const response = await axios.get(`https://hofusushi-d77c0453ff79.herokuapp.com/api/employers/${selectedEmployerId}`);
           setEmployerDetails(response.data);
         } catch (error) {
           Swal.fire({

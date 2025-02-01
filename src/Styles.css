@@ -6,15 +6,30 @@
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
-    margin-top: 5%;
-    background-color: #f0f4f8;
+    position: relative; /* Necesario para la superposición */
 }
 
+.container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('./Fotos/WhatsApp\ Image\ 2025-01-31\ at\ 11.36.23\ PM.jpeg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.5; /* Ajusta esta opacidad como desees */
+    z-index: -1; /* Asegúrate de que el contenido esté por encima de la imagen */
+}
+
+
+/* Form Container */
 .form-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Alinear hacia la derecha */
-    justify-content: center; /* Centra verticalmente */
+    align-items: flex-end; /* Align to the right */
+    justify-content: center; /* Vertically center */
     width: 100%;
     max-width: 500px;
     gap: 10px;
@@ -22,19 +37,18 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin: 0 auto; /* Centra horizontalmente */
-    margin-top: 20px; /* Reduce el espacio en la parte superior */
-    margin-bottom: 20px; /* Reduce el espacio en la parte inferior */
+    margin: 0 auto; /* Horizontally center */
 }
 
+/* Inputs */
 input {
-    width: calc(100% - 20px); /* Asegura que los inputs ocupen todo el ancho disponible menos el margen */
+    width: calc(100% - 20px); /* Ensure inputs take full width minus margin */
     padding: 12px;
     border-radius: 4px;
     border: 1px solid #ccc;
     font-size: 16px;
     transition: border-color 0.3s;
-    margin-bottom: 10px; /* Espacio entre inputs */
+    margin-bottom: 10px; /* Space between inputs */
 }
 
 input:hover,
@@ -43,12 +57,10 @@ input:focus {
     outline: none;
 }
 
-.submit-button,
-.edit-button,
-.delete-button,
-.cancel-button,
-.modal-button {
-    width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
+/* Buttons */
+.button,
+.red-button {
+    width: 100%; /* Ensure the button takes full width */
     padding: 10px;
     background-color: rgb(216, 15, 15);
     color: white;
@@ -56,100 +68,97 @@ input:focus {
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-top: 10px; /* Añade un pequeño margen superior */
+    margin-top: 10px; /* Add a small top margin */
 }
 
-.submit-button:hover,
-.edit-button:hover,
-.cancel-button:hover,
-.delete-button:hover,
-.modal-button:hover {
+.button:hover,
+.red-button:hover {
     background-color: rgb(216, 15, 15);
     opacity: 0.9;
 }
 
+/* Table */
 .table-container {
     width: 100%;
     max-width: 800px;
-    margin-top: 20px;
     border-collapse: collapse;
-    background-color: #fff; 
-    border-radius: 8px; 
+    background-color: #fff;
+    border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 table {
     width: 100%;
-    border-radius: 8px; 
-    overflow: hidden; 
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 th,
 td {
     padding: 10px;
-    border-bottom: 1px solid #ccc; 
-    text-align: left; 
+    border-bottom: 1px solid #ccc;
+    text-align: left;
 }
 
 th {
-    background-color: #f8f9fa; 
+    background-color: #f8f9fa;
 }
 
 tr:hover {
-    background-color: #f1f1f1; 
+    background-color: #f1f1f1;
 }
 
-.product-item-row {
-    margin-top: 10px; /* Espacio entre filas de productos */
+/* Product Rows */
+.product-item-row td {
+    padding: 0;
+    border: none;
 }
 
 .product-item {
-    display: flex; /* Usar flexbox para alinear elementos */
-    justify-content: space-between; /* Espacio entre el nombre y la cantidad */
-    padding: 10px 0; /* Espacio vertical alrededor de cada producto */
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #fff;
+    border-top: 1px solid #ccc; /* Add top border */
 }
 
 .product-item span {
-    flex-grow: 1; /* Permite que ambos elementos ocupen espacio equitativamente */
+    flex: 1;
 }
 
-.product-item span:last-child {
-    text-align: right; /* Alinear la cantidad a la derecha */
-}
-
+/* Additional Styles */
 .client-list {
     display: flex;
-    flex-direction: column; /* Alinear clientes verticalmente */
-    gap: 10px; /* Espacio entre cada cliente */
+    flex-direction: column; /* Align clients vertically */
+    gap: 10px; /* Space between each client */
 }
 
 .client-item {
     display: flex;
-    justify-content: space-between; /* Espacio entre la información del cliente y el botón */
-    align-items: center; /* Centra verticalmente */
-    padding: 10px; /* Espacio interno */
-    border: 1px solid #ccc; /* Borde alrededor del cuadro */
-    border-radius: 4px; /* Esquinas redondeadas */
-    margin-bottom: 10px; /* Espacio entre los cuadros de clientes */
+    justify-content: space-between; /* Space between client info and button */
+    align-items: center; /* Vertically center */
+    padding: 10px; /* Internal padding */
+    border: 1px solid #ccc; /* Border around the box */
+    border-radius: 4px; /* Rounded corners */
+    margin-bottom: 10px; /* Space between client boxes */
 }
 
 .client-info {
     display: flex;
-    flex-direction: column; /* Alinea nombre y teléfono verticalmente */
-    text-align: right; /* Alinear texto a la derecha */
-    margin-right: 10px; /* Espacio entre la información y el botón */
+    flex-direction: column; /* Align name and phone vertically */
+    text-align: right; /* Align text to the right */
+    margin-right: 10px; /* Space between info and button */
 }
 
 .client-name {
-    font-weight: bold; /* Resalta el nombre del cliente */
+    font-weight: bold; /* Highlight client name */
 }
 
 .client-phone {
-    color: #555; /* Color más suave para el teléfono */
+    color: #555; /* Softer color for phone */
 }
 
-/* Estilos para modal y overlay */
-
+/* Modal and Overlay Styles */
 .modal {
     position: fixed;
     top: 50%;
@@ -158,10 +167,10 @@ tr:hover {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000; 
+    z-index: 1000;
     padding: 20px;
-    width: auto; 
-    max-width: 90%; 
+    width: auto;
+    max-width: 90%;
 }
 
 .modal-overlay {
@@ -170,14 +179,13 @@ tr:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); 
-    z-index: 999; 
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
 }
 
-/* Estilos para la barra de navegación */
-
+/* Navbar Styles */
 .navbar {
-    background-color: #D80F0F; /* Rojo bonito */
+    background-color: #333;
     overflow: hidden;
 }
 
@@ -186,12 +194,12 @@ tr:hover {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: space-between; /* Para distribuir los elementos uniformemente */
+    justify-content: space-between; /* Distribute items evenly */
     align-items: center;
 }
 
 .navbar-li {
-    flex: 1; /* Hace que cada elemento se expanda igualmente */
+    flex: 1; /* Make each item expand equally */
 }
 
 .navbar-link {
@@ -204,20 +212,19 @@ tr:hover {
 .navbar-white-button {
     color: black;
     background-color: white;
-    border-radius: 20px; /* Esquinas redondeadas */
-    padding: 10px 20px; /* Añadir relleno adicional para hacer el botón redondo */
-    margin: 0 10px; /* Espaciado entre botones */
+    border-radius: 20px; /* Rounded corners */
+    padding: 10px 20px; /* Add extra padding to make the button round */
+    margin: 0 10px; /* Spacing between buttons */
 }
 
 .navbar-image {
     width: 40px;
     height: 40px;
-    border-radius: 50%; /* Hacer el borde redondo */
-    border: 2px solid gold; /* Borde dorado */
+    border-radius: 50%; /* Make the border round */
+    border: 2px solid gold; /* Gold border */
 }
 
-/* Estilos para el Home */
-
+/* Home Styles */
 .home-container {
     display: flex;
     flex-direction: column;
@@ -234,26 +241,169 @@ tr:hover {
     margin: 10px 0;
 }
 
-/* Otros estilos existentes */
-
+/* Responsive Adjustments */
 @media (max-width: 600px) {
     .container {
-        padding: 10px; 
-        margin-top: 3%; 
+        padding: 10px;
+        margin-top: 3%;
     }
     
     .form-container {
-        width: auto; 
-        max-width: auto; 
-        padding: 10px; 
-        margin: auto; 
-        gap: 10px; 
+        width: auto;
+        max-width: auto;
+        padding: 10px;
+        margin: auto;
+        gap: 10px;
     }
     
     .table-container {
-        width: auto; 
-        max-width: auto; 
-        margin-top: 10px; 
-        padding: 10px; 
+        width: auto;
+        max-width: auto;
+        margin-top: 10px;
+        padding: 10px;
     }
+}
+
+.total-bar {
+    margin: 20px 0;
+    padding: 10px 20px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.table-container.expanded-table {
+    width: 100%; /* Take full width */
+    max-width: 100%;
+    overflow-x: auto; /* Add horizontal scroll if needed */
+}
+
+table {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+}
+
+th {
+    background-color: #f8f9fa;
+}
+
+/* Styles for selected products list */
+.selected-products-list {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.selected-products-list h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+}
+
+.selected-products-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.selected-products-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.selected-products-list li:last-child {
+    border-bottom: none;
+}
+
+.selected-products-list li:hover {
+    background-color: #f9f9f9;
+}
+
+.selected-product-info {
+    width: 67%; /* 67% of the space */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center; /* Center align text horizontally */
+}
+
+.selected-product-info span {
+    margin-right: 10px;
+    flex: 1; /* Use flex for better alignment */
+}
+
+.selected-products-list .red-button {
+    width: 33%; /* 33% of the space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #d80f0f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.selected-products-list .red-button:hover {
+    background-color: #b10d0d;
+}
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-top: 4px solid #d80f0f;
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.footer-content h3 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.footer-content p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+.footer-contact p {
+    margin: 5px 0;
+}
+
+.footer-contact a {
+    color: #d80f0f;
+    text-decoration: none;
+}
+
+.footer-contact a:hover {
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    margin-top: 20px;
+    font-size: 14px;
 }

@@ -14,7 +14,7 @@ const Cliente = () => {
   // Función para obtener clientes
   const fetchClientes = async () => {
     try {
-      const response = await axios.get('https://hofusushi-3869a82ef3b4.herokuapp.com/api/clients');
+      const response = await axios.get('https://hofusushi-d77c0453ff79.herokuapp.com/api/clients');
       setClientes(response.data);
     } catch (error) {
       Swal.fire('Error', 'Error al obtener los clientes: ' + error.message, 'error');
@@ -43,11 +43,11 @@ const Cliente = () => {
     try {
       if (form.id_person) {
         // Actualizar cliente existente
-        await axios.put(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/clients/${form.id_person}`, form);
+        await axios.put(`https://hofusushi-d77c0453ff79.herokuapp.com/api/clients/${form.id_person}`, form);
         Swal.fire('Éxito', 'Cliente actualizado exitosamente', 'success');
       } else {
         // Crear nuevo cliente
-        await axios.post('https://hofusushi-3869a82ef3b4.herokuapp.com/api/clients', form);
+        await axios.post('https://hofusushi-d77c0453ff79.herokuapp.com/api/clients', form);
         Swal.fire('Éxito', 'Cliente creado exitosamente', 'success');
       }
       fetchClientes(); // Volver a cargar clientes después de la operación
@@ -64,7 +64,7 @@ const Cliente = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/clients/${id}`);
+      const response = await axios.delete(`https://hofusushi-d77c0453ff79.herokuapp.com/api/clients/${id}`);
       Swal.fire('Éxito', response.data, 'success');
       fetchClientes(); // Volver a cargar clientes después de eliminar
     } catch (error) {
@@ -74,7 +74,7 @@ const Cliente = () => {
 
   const handleModalSave = async (cliente) => {
     try {
-      await axios.put(`https://hofusushi-3869a82ef3b4.herokuapp.com/api/clients/${cliente.id_person}`, cliente);
+      await axios.put(`https://hofusushi-d77c0453ff79.herokuapp.com/api/clients/${cliente.id_person}`, cliente);
       Swal.fire('Éxito', 'Cliente actualizado exitosamente', 'success');
       fetchClientes(); // Volver a cargar clientes después de actualizar
     } catch (error) {
@@ -126,7 +126,7 @@ const Cliente = () => {
           placeholder="Preferencia del cliente"
           required
         />
-        <button type="submit" className="submit-button">{form.id_person ? 'Actualizar' : 'Crear'}</button>
+        <button type="submit" className="red-button">{form.id_person ? 'Actualizar' : 'Crear'}</button>
       </form>
       
       <h2>Buscar Clientes</h2>
@@ -144,7 +144,7 @@ const Cliente = () => {
         onChange={handleApellidoChange}
         className="search-input"
       />
-
+  
       <h2>Clientes:</h2>
       <table className="table-container">
         <thead>
@@ -166,14 +166,14 @@ const Cliente = () => {
               <td>{cliente.telefono_person}</td>
               <td>{cliente.preferencia_client}</td>
               <td>
-                <button onClick={() => handleEdit(cliente)} className="edit-button">Editar</button>
-                <button onClick={() => handleDelete(cliente.id_person)} className="delete-button">Eliminar</button>
+                <button onClick={() => handleEdit(cliente)} className="red-button">Editar</button>
+                <button onClick={() => handleDelete(cliente.id_person)} className="red-button">Eliminar</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
+  
       <ModalEditarCliente
         isOpen={modalIsOpen}
         onClose={() => setModalIsOpen(false)}

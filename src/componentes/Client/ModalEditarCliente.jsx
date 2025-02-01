@@ -81,13 +81,13 @@ const ModalEditarCliente = ({ isOpen, onClose, cliente, onSave }) => {
             className="modal-input"
           />
           
-          <button type="submit" className="modal-button">Guardar</button>
-          <button type="button" className="modal-button cancel-button" onClick={onClose}>Cancelar</button>
+          <button type="submit" className="red-button">Guardar</button>
+          <button type="button" className="red-button cancel-button" onClick={onClose}>Cancelar</button>
         </form>
       </div>
-
     </>
   );
+  
 };
 
 export default ModalEditarCliente;
